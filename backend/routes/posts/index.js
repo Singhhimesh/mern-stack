@@ -24,8 +24,9 @@ const upload = multer({
 
 const postController = require('../../controllers/PostController');
 
-// The middleware upload.single should specify the field name, like 'image' or 'file'
-postRoute.post('/post/store', upload.single('image'), postController.store);
+postRoute.post('/posts/store', upload.single('image'), postController.store);
 postRoute.get('/posts', postController.index);
+postRoute.get('/posts/:id', postController.findById);
+postRoute.get('/posts/by-slug/:slug', postController.findBySlug);
 
 module.exports = postRoute;

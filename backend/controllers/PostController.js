@@ -2,10 +2,32 @@ const Post = require('../models/Post');
 const { request, response } = require('../routes/posts');
 
 /**
+ * Show the listing of the resources.
+ *
+ * @param {Object} request
+ * @param {Object} response
+ */
+const index = async (request, response) => {
+    try {
+        const posts = await Post.find({ status: 1 });
+
+        response.send({
+            success: true,
+            data: posts,
+        });
+    } catch (error) {
+        response.status(400).send({
+            success: false,
+            message: error.message,
+        });
+    }
+};
+
+/**
  * Store the posts
- * 
- * @param {Object} request 
- * @param {Object} response 
+ *
+ * @param {Object} request
+ * @param {Object} response
  */
 const store = async (request, response) => {
     try {
@@ -31,39 +53,65 @@ const store = async (request, response) => {
     }
 };
 
-/**
- * Show the listing of the resources.
- * 
- * @param {Object} request 
- * @param {Object} response 
- */
-const index = async (request, response) => {
+const findBySlug = async (request, response) => {
     try {
-        const posts = await Post.find();
-        
+        const postSlug = request.params.slug;
+
+        const post = await Post.findOne({ slug: postSlug });
+
+        if (!post) {
+            return response.status(404).send({
+                success: false,
+                message: 'Post not found',
+            });
+        }
+
         response.send({
             success: true,
-            data: posts,
+            data: post,
         });
-    } catch (error) {
+    } catch(error) {
         response.status(400).send({
             success: false,
             message: error.message,
         });
     }
-};
+}
 
+const findById = async (request, response) => {
+    try {
+        const postId = request.params.id;
+        const post = await Post.findById(postId);
+
+        if (!post) {
+            return response.status(404).send({
+                success: false,
+                message: 'Post not found',
+            });
+        }
+
+        response.send({
+            success: true,
+            data: post,
+        });
+    } catch(error) {
+        response.status(400).send({
+            success: false,
+            message: error.message,
+        });
+    }
+}
 
 /**
  * Edit a post
- * 
- * @param {Object} request 
- * @param {Object} response 
+ *
+ * @param {Object} request
+ * @param {Object} response
  */
 const edit = async (request, response) => {
     try {
         const postId = request.params.id;
-        
+
         const post = await Post.findById(postId);
 
         if (! post) {
@@ -97,7 +145,9 @@ const edit = async (request, response) => {
 };
 
 module.exports = {
-    store,
     index,
+    store,
+    findById,
+    findBySlug,
     edit
 };
