@@ -1,24 +1,22 @@
-const express = require('express');
+import express from 'express';
+import path from 'path';
+import cors from 'cors';
+import mongoose from 'mongoose';
+import postRoute from './routes/posts/index.js';
 
 const app = express();
 
-const path = require('path');
-
-const cros = require('cors');
-
-app.use(cros({
+app.use(cors({
     origin: '*',
 }));
 
-const mongoose = require('mongoose');
-
 mongoose.connect("mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.1.4");
 
-const postRoute = require('./routes/posts/index');
-
 app.use('/api', postRoute);
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(import.meta.url, 'public')));
 
-app.listen(8000, () => {
-    console.log('Server is running...');
+const PORT = 8000;
+
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
 });

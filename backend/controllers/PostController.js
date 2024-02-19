@@ -1,5 +1,4 @@
-const Post = require('../models/Post');
-const { request, response } = require('../routes/posts');
+import Post from '../models/Post.js';
 
 /**
  * Show the listing of the resources.
@@ -144,7 +143,7 @@ const edit = async (request, response) => {
     }
 };
 
-module.exports = {
+export {
     index,
     store,
     findById,

@@ -1,8 +1,16 @@
-const express = require("express");
+import express from "express";
+import bodyParser from "body-parser";
+import path from "path";
+import multer from "multer";
+import {    
+    index,
+    store,
+    findById,
+    findBySlug,
+    edit
+} from '../../controllers/PostController.js';
+
 const postRoute = express();
-const bodyParser = require("body-parser");
-const multer = require('multer');
-const path = require('path');
 
 postRoute.use(bodyParser.json());
 postRoute.use(bodyParser.urlencoded({ extended: true }));
@@ -22,11 +30,9 @@ const upload = multer({
     storage: multerStorage,
 });
 
-const postController = require('../../controllers/PostController');
+postRoute.post('/posts/store', upload.single('image'), store);
+postRoute.get('/posts', index);
+postRoute.get('/posts/:id', findById);
+postRoute.get('/posts/by-slug/:slug', findBySlug);
 
-postRoute.post('/posts/store', upload.single('image'), postController.store);
-postRoute.get('/posts', postController.index);
-postRoute.get('/posts/:id', postController.findById);
-postRoute.get('/posts/by-slug/:slug', postController.findBySlug);
-
-module.exports = postRoute;
+export default postRoute;

@@ -13,16 +13,12 @@ const postSchema = mongoose.Schema({
     type: Boolean,
     required: true,
   },
-  description: {
-    type: String,
-    required: true,
-  },
   image: {
     type: String,
     required: true,
   },
 });
 
-const Post = mongoose.model("post", postSchema);
+const Post = mongoose.model("categories", postSchema);
 
 export default Post;
